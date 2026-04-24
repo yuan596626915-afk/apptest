@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>网关计数监控 APP</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="phone">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">网关计数终端</p>
+            <h1>水泥袋计数监控</h1>
+          </div>
+          <span class="status-pill offline" id="onlineStatus">未连接</span>
+        </header>
+
+        <section class="settings-card" aria-label="网关与摄像头配置">
+          <div class="section-title">
+            <div>
+              <p class="eyebrow">连接配置</p>
+              <h2>网关和摄像头</h2>
+            </div>
+            <button class="ghost-button" id="connectButton" type="button">连接网关</button>
+          </div>
+
+          <label class="field">
+            <span>网关地址</span>
+            <input id="gatewayBase" placeholder="http://192.168.1.100:8080" />
+          </label>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>状态接口</span>
+              <input id="statusPath" placeholder="/api/status" />
+            </label>
+            <label class="field">
+              <span>控制接口</span>
+              <input id="controlPath" placeholder="/api/control" />
+            </label>
+          </div>
+
+          <label class="field">
+            <span>摄像头型号/名称</span>
+            <input id="cameraName" placeholder="例如 海康 DS-2CD3T / 大华 IPC-HFW" />
+          </label>
+
+          <label class="field">
+            <span>摄像头画面地址</span>
+            <input id="cameraStream" placeholder="HLS/MJPEG/WebRTC 地址，由网关提供" />
+          </label>
+
+          <label class="field">
+            <span>访问令牌，可不填</span>
+            <input id="authToken" placeholder="Bearer token / API token" />
+          </label>
+
+          <p class="help-text">
+            浏览器不能直接播放 RTSP，网关需要把摄像头转成 HLS、MJPEG 或 WebRTC 地址。
+          </p>
+        </section>
+
+        <section class="camera-card" aria-label="现实摄像头窗口">
+          <video id="cameraVideo" autoplay playsinline muted controls></video>
+          <img id="cameraImage" alt="摄像头画面" />
+          <div class="camera-placeholder" id="cameraPlaceholder">
+            <strong>等待摄像头地址</strong>
+            <span>连接网关后，这里显示真实摄像头窗口</span>
+          </div>
+          <div class="camera-hud">
+            <span id="cameraState">摄像头未连接</span>
+          </div>
+        </section>
+
+        <section class="count-panel">
+          <div class="count-copy">
+            <p>网关返回数量</p>
+            <strong><span id="countValue">--</span><small> 袋</small></strong>
+          </div>
+          <div class="run-state">
+            <span id="runDot"></span>
+            <span id="runText">未知</span>
+          </div>
+        </section>
+
+        <section class="controls" aria-label="网关启停控制">
+          <button class="primary-button" id="startButton" type="button">
+            <span class="button-icon">▶</span>
+            开始
+          </button>
+          <button class="danger-button" id="stopButton" type="button">
+            <span class="button-icon">■</span>
+            停止
+          </button>
+        </section>
+
+        <section class="system-list" aria-label="设备状态">
+          <div class="system-row">
+            <span>网关状态</span>
+            <strong id="gatewayState">未连接</strong>
+          </div>
+          <div class="system-row">
+            <span>摄像头</span>
+            <strong id="cameraModel">未指定</strong>
+          </div>
+          <div class="system-row">
+            <span>计数程序</span>
+            <strong id="counterState">等待网关数据</strong>
+          </div>
+          <div class="system-row">
+            <span>最近更新</span>
+            <strong id="lastUpdate">--</strong>
+          </div>
+        </section>
+
+        <section class="protocol-card">
+          <p class="protocol-title">网关接口约定</p>
+          <code>GET /api/status</code>
+          <span>返回 count、running、cameraOnline、updatedAt</span>
+          <code>POST /api/control</code>
+          <span>发送 {"action":"start"} 或 {"action":"stop"}</span>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
